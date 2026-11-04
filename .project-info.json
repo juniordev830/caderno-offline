@@ -1,0 +1,31 @@
+{
+  "name": "caderno-offline",
+  "title": "Caderno Offline",
+  "description": "Anotações em Markdown com busca, armazenamento local e exportação.",
+  "primary_language": "Dart",
+  "proposed_technologies": "Dart, Flutter, Markdown e Drift",
+  "status": "initial-core",
+  "github_created": true,
+  "application_implemented": true,
+  "planned_features": [
+    "Editar notas em Markdown",
+    "Buscar no conteúdo",
+    "Exportar e importar notas"
+  ],
+  "implemented_technologies": [
+    "Dart",
+    "dart:io e dart:convert"
+  ],
+  "validation": "Testes executáveis aprovados antes da publicação; consultar Actions do commit atual.",
+  "github_url": "https://github.com/juniordev830/caderno-offline",
+  "prepublication_validation": {
+    "name": "caderno-offline",
+    "kind": "awaiting_repository",
+    "status": "completed",
+    "conclusion": "success",
+    "job_id": 126139216930,
+    "run_id": 41699635255,
+    "sha": "586e6e0d6235a83769e858279ed2a2ed3063c136",
+    "url": "https://github.com/juniordev830/cifras-transpositor/actions/runs/41699635255/job/126139216930"
+  }
+}
