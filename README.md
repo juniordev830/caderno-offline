@@ -37,3 +37,37 @@ A proposta completa de evolução está em `ARQUITETURA.md`. As tecnologias prop
 - [ ] Exportar e importar notas — ampliar o núcleo atual até o fluxo completo.
 
 Licença: ainda não definida.
+
+## Caderno offline ampliado
+
+A busca original foi preservada. A nova classe `Notebook` oferece CRUD de
+notas Markdown, títulos, tags, paginação, estatísticas e backup JSON versionado.
+
+```sh
+dart run bin/main.dart --self-test
+dart run bin/main.dart --notes-list examples/notas
+dart run bin/main.dart --notes-search examples/notas engenharia
+dart run bin/main.dart --notes-tag examples/notas estudo
+dart run bin/main.dart --notes-stats examples/notas
+dart run bin/main.dart --notes-export examples/notas > backup.json
+dart run bin/main.dart --notes-import examples/notas backup.json
+dart run bin/main.dart --notes-create examples/notas nova nota.md
+dart run bin/main.dart --notes-update examples/notas nova nota-editada.md
+dart run bin/main.dart --notes-read examples/notas nova
+dart run bin/main.dart --notes-delete examples/notas nova
+```
+
+Os IDs aceitam apenas letras, números, hífen e underscore. Caminhos com `../`,
+links simbólicos e arquivos não Markdown são rejeitados ou ignorados.
+A gravação usa arquivo temporário e renomeação atômica. O backup JSON
+verifica todos os registros antes de iniciar a importação e não sobrescreve
+notas existentes por padrão.
+
+**Limitações:** armazenamento local, sem sincronização remota, autenticação
+ou criptografia. Até 1 MB por nota e 10 mil notas por caderno; a busca
+considera apenas a pasta imediata e é case-insensitive, sem normalização
+de acentos. A importação não oferece transação entre múltiplos arquivos
+em caso de falha do sistema operacional.
+
+Os testes incluem busca, CRUD, Unicode, tags, paginação, backup, validação
+de entrada e proteção contra travessia de diretórios e links simbólicos.
