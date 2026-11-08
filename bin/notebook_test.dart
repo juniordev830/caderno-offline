@@ -33,7 +33,7 @@ int runNotebookTests() {
     try {
       action(Notebook(folder), folder);
     } finally {
-      folder.deleteSync(recursive: true);
+      if (folder.existsSync()) folder.deleteSync(recursive: true);
     }
   }
 
