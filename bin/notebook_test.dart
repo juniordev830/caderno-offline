@@ -53,7 +53,7 @@ int runNotebookTests() {
   }));
 
   scenario('título longo é truncado', () => withBook((book, folder) {
-    ensure(book.titleFor('x', '# ' + 'a' * 150).length == 120, 'Tamanho');
+    ensure(book.titleFor('x', '# ' + List.filled(150, 'a').join()).length == 120, 'Tamanho');
   }));
 
   scenario('tags são únicas e ordenadas', () => withBook((book, folder) {
@@ -141,7 +141,7 @@ int runNotebookTests() {
   }));
 
   scenario('nota maior que 1 MB é rejeitada', () => withBook((book, folder) {
-    fails(() => book.create('a', 'x' * 1000001));
+    fails(() => book.create('a', List.filled(1000001, 'x').join()));
     ensure(book.list().isEmpty, 'Arquivo parcial');
   }));
 
