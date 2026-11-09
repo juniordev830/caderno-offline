@@ -71,3 +71,7 @@ em caso de falha do sistema operacional.
 
 Os testes incluem busca, CRUD, Unicode, tags, paginação, backup, validação
 de entrada e proteção contra travessia de diretórios e links simbólicos.
+
+## Importação de backup com limite seguro
+
+A opção explícita `overwrite: true` permite substituir notas já existentes, mas **não ignora o máximo de 10.000 notas**. Antes de qualquer escrita, o importador conta os IDs novos e rejeita um backup que estouraria esse teto, preservando os arquivos atuais. Os testes incluem importações com mais de 10 mil IDs, colisões válidas e ausência de gravação parcial quando a quantidade excede o limite.
