@@ -238,7 +238,11 @@ class Notebook {
       }
       incoming[id] = content;
     }
-    if (incoming.length + list().length > maxNotes && !overwrite) {
+    final existing = list().map((note) => note.id).toSet();
+    // With overwrite enabled, collisions replace notes but new IDs still
+    // count toward the hard cap. Validate capacity before writing any file.
+    final newNotes = incoming.keys.where((id) => !existing.contains(id)).length;
+    if (existing.length + newNotes > maxNotes) {
       throw const FormatException('Backup excede limite de notas');
     }
     for (final id in incoming.keys) {
