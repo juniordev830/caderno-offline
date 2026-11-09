@@ -217,6 +217,30 @@ int runNotebookTests() {
     ensure(book.list().isEmpty, 'Importação parcial');
   }));
 
+  scenario('backup respeita limite inclusive com overwrite', () => withBook((book, folder) {
+    book.create('original', 'conteúdo intocado');
+    final entries = List.generate(Notebook.maxNotes, (i) => {
+      'id': 'new-$i', 'content': 'nota'
+    });
+    final backup = jsonEncode({'version': 1, 'notes': entries});
+    fails(() => book.importJson(backup, overwrite: true));
+    ensure(book.read('original').content == 'conteúdo intocado',
+      'A importação inválida alterou a nota original');
+    ensure(book.list().length == 1, 'Importação parcial de arquivo acima do limite');
+  }));
+
+  scenario('backup com overwrite só substitui IDs existentes', () => withBook((book, folder) {
+    book.create('a', 'antigo');
+    final backup = jsonEncode({'version': 1, 'notes': [
+      {'id': 'a', 'content': 'novo'},
+      {'id': 'b', 'content': 'adicionado'}
+    ]});
+    ensure(book.importJson(backup, overwrite: true) == 2,
+      'Contagem de notas importadas');
+    ensure(book.list().length == 2, 'Contagem de notas após merge');
+    ensure(book.read('a').content == 'novo', 'Colisão não substituída');
+  }));
+
   scenario('pasta ausente é rejeitada', () => withBook((book, folder) {
     folder.deleteSync();
     fails(() => book.list());
