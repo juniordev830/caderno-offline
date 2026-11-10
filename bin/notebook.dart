@@ -87,7 +87,7 @@ class Notebook {
     for (final line in const LineSplitter().convert(content)) {
       final title = line.replaceFirst(RegExp(r'^#{1,6}\s+'), '').trim();
       if (title.isNotEmpty) return title.length <= 120
-          ? title : title.substring(0, 120);
+          ? title : String.fromCharCodes(title.runes.take(120));
     }
     return id;
   }
