@@ -60,6 +60,25 @@ int runNotebookTests() {
     ensure(book.extractTags('#zeta #alfa #zeta').join(',') == 'alfa,zeta', 'Tags');
   }));
 
+  scenario('tags acima de 32 caracteres não geram falsos positivos', () =>
+      withBook((book, folder) {
+    final valid = List.filled(32, 'a').join();
+    final tooLong = valid + 'b';
+    book.create('longa', '#${tooLong}');
+    book.create('valida', '#${valid}! #ok #abc_def #abc-def');
+
+    ensure(book.read('longa').tags.isEmpty,
+      'Uma tag de 33 caracteres não pode ser truncada para 32');
+    final tags = book.read('valida').tags;
+    ensure(tags.contains(valid), 'Uma tag de 32 caracteres deve ser aceita');
+    ensure(tags.contains('ok') && tags.contains('abc_def') &&
+      tags.contains('abc-def'), 'Tags com pontuação delimitadora e símbolos válidos');
+    ensure(book.search('', tag: valid).single.id == 'valida',
+      'Busca por tag não deve incluir nota com hashtag longa');
+    ensure(book.search('', tag: tooLong).isEmpty,
+      'Tag acima do limite não deve ser indexada');
+  }));
+
   scenario('busca ignora maiúsculas', () => withBook((book, folder) {
     book.create('a', '# Aula\nENGENHARIA');
     ensure(book.search('engenharia').length == 1, 'Busca');
