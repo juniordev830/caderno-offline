@@ -56,8 +56,36 @@ int runNotebookTests() {
     ensure(book.titleFor('x', '# ' + List.filled(150, 'a').join()).length == 120, 'Tamanho');
   }));
 
+  scenario('título com emoji não é cortado no meio do caractere', () =>
+      withBook((book, folder) {
+    final source = '# ' + List.filled(119, 'a').join() + '😀 fim';
+    final title = book.titleFor('emoji', source);
+    ensure(title.endsWith('😀'), 'Emoji foi cortado no meio');
+    ensure(title.runes.length == 120, 'Limite em caracteres Unicode');
+    ensure(utf8.decode(utf8.encode(title)) == title, 'UTF-8 inválido após corte');
+  }));
+
   scenario('tags são únicas e ordenadas', () => withBook((book, folder) {
     ensure(book.extractTags('#zeta #alfa #zeta').join(',') == 'alfa,zeta', 'Tags');
+  }));
+
+  scenario('tags acima de 32 caracteres não geram falsos positivos', () =>
+      withBook((book, folder) {
+    final valid = List.filled(32, 'a').join();
+    final tooLong = valid + 'b';
+    book.create('longa', '#${tooLong}');
+    book.create('valida', '#${valid}! #ok #abc_def #abc-def');
+
+    ensure(book.read('longa').tags.isEmpty,
+      'Uma tag de 33 caracteres não pode ser truncada para 32');
+    final tags = book.read('valida').tags;
+    ensure(tags.contains(valid), 'Uma tag de 32 caracteres deve ser aceita');
+    ensure(tags.contains('ok') && tags.contains('abc_def') &&
+      tags.contains('abc-def'), 'Tags com pontuação delimitadora e símbolos válidos');
+    ensure(book.search('', tag: valid).single.id == 'valida',
+      'Busca por tag não deve incluir nota com hashtag longa');
+    ensure(book.search('', tag: tooLong).isEmpty,
+      'Tag acima do limite não deve ser indexada');
   }));
 
   scenario('busca ignora maiúsculas', () => withBook((book, folder) {

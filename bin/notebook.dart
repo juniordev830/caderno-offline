@@ -24,7 +24,10 @@ class Notebook {
   static const int maxNoteBytes = 1000000;
   static const int maxNotes = 10000;
   static final RegExp _idPattern = RegExp(r'^[A-Za-z0-9][A-Za-z0-9_-]{0,79}$');
-  static final RegExp _tagPattern = RegExp(r'(?:^|\s)#([A-Za-z0-9_-]{2,32})');
+  // Do not silently treat the first 32 characters of an oversized tag as valid.
+  static final RegExp _tagPattern = RegExp(
+    r'(?:^|\s)#([A-Za-z0-9_-]{2,32})(?![A-Za-z0-9_-])',
+  );
 
   Notebook(this.folder);
 
@@ -84,7 +87,7 @@ class Notebook {
     for (final line in const LineSplitter().convert(content)) {
       final title = line.replaceFirst(RegExp(r'^#{1,6}\s+'), '').trim();
       if (title.isNotEmpty) return title.length <= 120
-          ? title : title.substring(0, 120);
+          ? title : String.fromCharCodes(title.runes.take(120));
     }
     return id;
   }

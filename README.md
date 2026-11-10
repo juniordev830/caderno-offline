@@ -42,6 +42,9 @@ Licença: ainda não definida.
 
 A busca original foi preservada. A nova classe `Notebook` oferece CRUD de
 notas Markdown, títulos, tags, paginação, estatísticas e backup JSON versionado.
+Tags no formato `#nome` aceitam de **2 a 32** caracteres ASCII (`A-Z`, `a-z`,
+`0-9`, `_` e `-`). Hashtags maiores são ignoradas por completo, sem truncar a
+tag e sem gerar resultados incorretos na busca.
 
 ```sh
 dart run bin/main.dart --self-test
