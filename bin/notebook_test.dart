@@ -56,6 +56,15 @@ int runNotebookTests() {
     ensure(book.titleFor('x', '# ' + List.filled(150, 'a').join()).length == 120, 'Tamanho');
   }));
 
+  scenario('título com emoji não é cortado no meio do caractere', () =>
+      withBook((book, folder) {
+    final source = '# ' + List.filled(119, 'a').join() + '😀 fim';
+    final title = book.titleFor('emoji', source);
+    ensure(title.endsWith('😀'), 'Emoji foi cortado no meio');
+    ensure(title.runes.length == 120, 'Limite em caracteres Unicode');
+    ensure(utf8.decode(utf8.encode(title)) == title, 'UTF-8 inválido após corte');
+  }));
+
   scenario('tags são únicas e ordenadas', () => withBook((book, folder) {
     ensure(book.extractTags('#zeta #alfa #zeta').join(',') == 'alfa,zeta', 'Tags');
   }));
