@@ -46,6 +46,10 @@ void main(List<String> args) {
      if(args.length!=3) throw FormatException('Informe a tag');
      print(json.convert(book.search('',tag:args[2]).map((n)=>n.toJson()).toList()));
      return;
+    case '--notes-backlinks':
+     if(args.length!=3) throw FormatException('Informe o ID da nota alvo');
+     print(json.convert(book.backlinks(args[2]).map((n)=>n.toJson()).toList()));
+     return;
     case '--notes-read':
      if(args.length!=3) throw FormatException('Informe o ID da nota');
      print(json.convert(book.read(args[2]).toJson()));

@@ -287,5 +287,22 @@ int runNotebookTests() {
     ensure(book.list().isEmpty, 'Extensão indevida');
   }));
 
+  scenario('backlinks por ID existente', () => withBook((book, folder) {
+    book.create('destino', '# Página alvo');
+    book.create('um', 'Veja [[destino]] no caderno.');
+    book.create('dois', '[[destino]] e novamente [[destino]]');
+    book.create('tres', 'Um texto sem referência.');
+    ensure(book.backlinks('destino').map((n) => n.id).join(',') == 'dois,um',
+      'Fontes de backlink incorretas');
+  }));
+
+  scenario('backlinks não consideram caminhos arbitrários', () => withBook((book, folder) {
+    book.create('destino', '# alvo');
+    book.create('fora', '[[../destino]] e [[destino/arquivo]]');
+    ensure(book.backlinks('destino').isEmpty, 'Links inseguros não são válidos');
+    fails(() => book.backlinks('../destino'));
+    fails(() => book.backlinks('ausente'));
+  }));
+
   return passed;
 }
