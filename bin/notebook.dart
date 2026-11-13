@@ -195,6 +195,21 @@ class Notebook {
     return matches.skip(offset).take(limit).toList();
   }
 
+  /// List notes linking to an existing note via [[id]] syntax.
+  ///
+  /// This deliberately recognizes only simple note IDs, not arbitrary paths.
+  List<NoteRecord> backlinks(String id) {
+    _checkFolder();
+    _validateId(id);
+    read(id); // A backlink target must exist.
+    final link = RegExp(r'\[\[([A-Za-z0-9][A-Za-z0-9_-]{0,79})\]\]');
+    final sources = list().where((note) {
+      if (note.id == id) return false;
+      return link.allMatches(note.content).any((match) => match.group(1) == id);
+    }).toList();
+    return sources;
+  }
+
   Map<String, Object> stats() {
     final notes = list();
     final tags = <String, int>{};
