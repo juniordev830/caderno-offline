@@ -82,3 +82,9 @@ A opção explícita `overwrite: true` permite substituir notas já existentes, 
 ## Documentação de desenvolvimento
 
 O [guia de validação e evolução](docs/GUIA_DE_VALIDACAO.md) registra o estado atual, os testes e os próximos incrementos deste projeto.
+
+### Links internos e referências reversas (incremento em revisão)
+
+O comando `dart run bin/main.dart --notes-backlinks examples/notas ID` encontra notas que contêm o texto `[[ID]]` apontando para uma nota existente. Ele não segue caminhos arbitrários, não acessa a internet e não modifica arquivos. Esta versão detecta apenas IDs simples e não faz parsing completo de Markdown (referências dentro de blocos de código podem aparecer como links).
+
+Execute `dart run bin/main.dart --self-test` para validar também os cenários de backlinks.
