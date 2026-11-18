@@ -11,4 +11,4 @@ jobs:
         with:
           persist-credentials: false
       - name: Analisar e testar
-        run: docker run --rm -v "$PWD:/work" -w /work dart:3.5.4 sh -c 'dart analyze bin && dart run bin/main.dart --self-test'
+        run: docker run --rm -v "$PWD:/work" -w /work dart:3.5.4@sha256:3f3877b9a75a1695dd284151d2dab5787bc6cefd04313b6a8e0bee98230d347b sh -c 'dart analyze bin && dart run bin/main.dart --self-test'
