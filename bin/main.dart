@@ -4,12 +4,13 @@ import 'notebook.dart';
 import 'notebook_test.dart';
 List<Map<String,String>> searchNotes(Directory folder,String query) {
  if(!folder.existsSync() || query.trim().isEmpty) throw FormatException('Pasta e termo de busca são obrigatórios');
+ final term = foldSearchText(query);
  final results=<Map<String,String>>[];
  for(final entry in folder.listSync(followLinks:false)) {
   if(entry is! File || !entry.path.toLowerCase().endsWith('.md')) continue;
   if(entry.lengthSync()>1000000) throw FormatException('Nota maior que 1 MB');
   final text=entry.readAsStringSync();
-  if(text.toLowerCase().contains(query.toLowerCase())) results.add({'arquivo':entry.uri.pathSegments.last,'titulo':text.split('\n').first.replaceFirst(RegExp(r'^#+\s*'),'').trim()});
+  if(foldSearchText(text).contains(term)) results.add({'arquivo':entry.uri.pathSegments.last,'titulo':text.split('\n').first.replaceFirst(RegExp(r'^#+\s*'),'').trim()});
  }
  results.sort((a,b)=>a['arquivo']!.compareTo(b['arquivo']!)); return results;
 }
