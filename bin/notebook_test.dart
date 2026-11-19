@@ -98,6 +98,13 @@ int runNotebookTests() {
     ensure(book.search('programação').length == 1, 'Título');
   }));
 
+  scenario('busca ignora acentos em Unicode composto e decomponível', () => withBook((book, folder) {
+    book.create('a', '# Programação\nOraça\u0303o e lições.');
+    final found = book.search('PROGRAMACAO').single;
+    ensure(found.title == 'Programação', 'Título mantém os acentos');
+    ensure(book.search('oracao').single.id == 'a', 'Busca em conteúdo decomposto');
+  }));
+
   scenario('busca por tag', () => withBook((book, folder) {
     book.create('a', '# Aula\n#estudo');
     book.create('b', '# Outra\n#trabalho');

@@ -26,7 +26,7 @@ Os testes cobrem invariantes e entradas inválidas. A preparação local não di
 
 Código e exemplos: `bin/main.dart e examples/notas/`. Os dados de exemplo são fictícios. As funções de domínio são separadas da leitura de argumentos no mesmo arquivo para manter a primeira versão pequena e revisável.
 
-Busca apenas a pasta imediata e usa conversão Unicode simples para minúsculas; não remove acentos. Edite as notas em seu editor de preferência. Editor Flutter, importação e Drift estão planejados.
+Busca apenas a pasta imediata e ignora maiúsculas e acentos do português. Por exemplo, `programacao` encontra `Programação`.
 
 A proposta completa de evolução está em `ARQUITETURA.md`. As tecnologias propostas nessa arquitetura não devem ser interpretadas como dependências já implementadas.
 
@@ -68,8 +68,8 @@ notas existentes por padrão.
 
 **Limitações:** armazenamento local, sem sincronização remota, autenticação
 ou criptografia. Até 1 MB por nota e 10 mil notas por caderno; a busca
-considera apenas a pasta imediata e é case-insensitive, sem normalização
-de acentos. A importação não oferece transação entre múltiplos arquivos
+considera apenas a pasta imediata e ignora maiúsculas e acentos do português.
+A importação não oferece transação entre múltiplos arquivos
 em caso de falha do sistema operacional.
 
 Os testes incluem busca, CRUD, Unicode, tags, paginação, backup, validação

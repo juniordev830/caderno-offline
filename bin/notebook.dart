@@ -1,6 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 
+const _portugueseAccents = <String, String>{
+  'á': 'a', 'à': 'a', 'â': 'a', 'ã': 'a',
+  'é': 'e', 'ê': 'e', 'í': 'i', 'ó': 'o', 'ô': 'o', 'õ': 'o',
+  'ú': 'u', 'ü': 'u', 'ç': 'c',
+};
+final _precomposedAccent = RegExp('[${_portugueseAccents.keys.join()}]');
+final _combiningLatinAccent = RegExp(r'[a-z][\u0300-\u036f]+');
+
+String foldSearchText(String text) => text.toLowerCase()
+    .replaceAllMapped(_precomposedAccent, (match) => _portugueseAccents[match[0]]!)
+    .replaceAllMapped(_combiningLatinAccent, (match) => match[0]![0]);
+
 class NoteRecord {
   final String id;
   final String title;
@@ -178,15 +190,14 @@ class Notebook {
     if (offset < 0 || limit < 1 || limit > 1000) {
       throw const FormatException('Paginação inválida');
     }
-    final term = query.trim().toLowerCase();
+    final term = foldSearchText(query.trim());
     final selectedTag = tag?.trim().toLowerCase();
     if (term.isEmpty && (selectedTag == null || selectedTag.isEmpty)) {
       throw const FormatException('Informe termo ou tag');
     }
     final matches = list().where((note) {
       final textMatches = term.isEmpty ||
-          note.content.toLowerCase().contains(term) ||
-          note.title.toLowerCase().contains(term);
+          foldSearchText(note.content).contains(term);
       final tagMatches = selectedTag == null || selectedTag.isEmpty ||
           note.tags.contains(selectedTag);
       return textMatches && tagMatches;
