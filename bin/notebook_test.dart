@@ -270,7 +270,7 @@ int runNotebookTests() {
       {'id': 'a', 'content': 'novo'},
       {'id': 'b', 'content': 'adicionado'}
     ]});
-    ensure(book.importJson(backup, overwrite: true) == 2,
+    ensure(book.importJson('\uFEFF' + backup, overwrite: true) == 2,
       'Contagem de notas importadas');
     ensure(book.list().length == 2, 'Contagem de notas após merge');
     ensure(book.read('a').content == 'novo', 'Colisão não substituída');
