@@ -250,7 +250,7 @@ class Notebook {
 
   int importJson(String source, {bool overwrite = false}) {
     _checkFolder();
-    final data = jsonDecode(source);
+    final data = jsonDecode(source.startsWith('\uFEFF') ? source.substring(1) : source);
     if (data is! Map || data['version'] != 1 || data['notes'] is! List) {
       throw const FormatException('Backup JSON inválido');
     }
