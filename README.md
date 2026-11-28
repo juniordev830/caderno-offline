@@ -1,5 +1,7 @@
 # Caderno Offline
 
+**Navegação** · [Implementado na primeira versão](#implementado-na-primeira-versão) · [Como executar](#como-executar) · [Testes](#testes) · [Código e estudo](docs/ENGENHARIA_REVERSA.md)
+
 Anotações em Markdown com busca, armazenamento local e exportação.
 
 ## Implementado na primeira versão
@@ -88,3 +90,9 @@ O [guia de validação e evolução](docs/GUIA_DE_VALIDACAO.md) registra o estad
 O comando `dart run bin/main.dart --notes-backlinks examples/notas ID` encontra notas que contêm o texto `[[ID]]` apontando para uma nota existente. Ele não segue caminhos arbitrários, não acessa a internet e não modifica arquivos. Esta versão detecta apenas IDs simples e não faz parsing completo de Markdown (referências dentro de blocos de código podem aparecer como links).
 
 Execute `dart run bin/main.dart --self-test` para validar também os cenários de backlinks.
+
+## Código e roteiro de estudo
+
+Como garantir que uma edição incompleta não comprometa a nota armazenada? O [guia de engenharia reversa](docs/ENGENHARIA_REVERSA.md) reúne o mapa dos módulos e uma pergunta técnica baseada no projeto.
+
+Mantido por [João Junior](https://github.com/juniordev830).
